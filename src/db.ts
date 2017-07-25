@@ -7,7 +7,8 @@ export default async function init() {
     name: 'micasa',
     dialect: 'postgres',
     username: 'micasa',
-    password: 'micasa'
+    password: 'micasa',
+    logging: false
   });
 
   sequelize.addModels([Listing])
