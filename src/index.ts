@@ -2,21 +2,30 @@ import * as express from 'express'
 
 import initDb from './db'
 import Listing from './models/Listing'
+import Owner from './models/Owner'
 
 
 async function main() {
 
   await initDb()
 
-  const l = new Listing({
-    name: 'some name',
-    owner: 'some owner',
-    address: 'some address'
+  const o = new Owner({
+    name: 'Nishant George Agrwal',
+    phoneNumber: '9902438036'
   })
 
-  l.save()
+  await o.save()
 
-  console.log(l.owner)
+  const l = new Listing({
+      name: 'Liberty Heights',
+      ownerId: o.id,
+      address: 'Green Paradise, Bangalore'
+  })
+
+  await l.save()
+
+  const listings = await Listing.findAll()
+  console.log(listings)
   
 }
 

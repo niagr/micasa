@@ -1,5 +1,6 @@
 import {Sequelize} from 'sequelize-typescript'
 import Listing from './models/Listing'
+import Owner from './models/Owner'
 
 export default async function init() {
 
@@ -8,10 +9,13 @@ export default async function init() {
     dialect: 'postgres',
     username: 'micasa',
     password: 'micasa',
-    logging: false
+    // logging: false
   });
 
-  sequelize.addModels([Listing])
+  sequelize.addModels([
+    Listing,
+    Owner
+  ])
 
   await sequelize.sync({force: true})
 

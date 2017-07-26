@@ -1,4 +1,5 @@
-import { Table, Column, Model } from 'sequelize-typescript'
+import { Table, Column, Model, BelongsTo, HasMany, ForeignKey, DataType } from 'sequelize-typescript'
+import Owner from './Owner'
 
 @Table
 export default class Listing extends Model<Listing> {
@@ -9,7 +10,10 @@ export default class Listing extends Model<Listing> {
   @Column({allowNull: false})
   address: string;
 
+  @ForeignKey(() => Owner)
   @Column({allowNull: false})
-  owner: string;
+  ownerId: number;
 
+  @BelongsTo(() => Owner)
+  owner: Owner
 }
