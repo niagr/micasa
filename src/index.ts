@@ -1,32 +1,57 @@
+require('source-map-support').install()
+import * as mongoose from 'mongoose'
 import * as express from 'express'
+import * as bodyParser from 'body-parser'
+import * as request from 'request'
 
-import initDb from './db'
-import Listing from './models/Listing'
-import Owner from './models/Owner'
+import {UserDocument, UserModel as User} from './models/User'
+import {OwnerDocument, OwnerModel as Owner} from './models/Owner'
+import {ListingDocument, ListingModel as Listing} from './models/Listing'
+import {PropertyDocument, PropertyModel as Property} from './models/Property'
 
+import {getPropertiesForNameOrAddress, createProperty} from './api/property'
 
-async function main() {
+async function main () {
 
-  await initDb()
+  const app = express()
 
-  const o = new Owner({
-    name: 'Nishant George Agrwal',
-    phoneNumber: '9902438036'
+  app.use((req, resp, next) => {
+    resp.setHeader('Access-Control-Allow-Origin', '*')
+    next()
   })
 
-  await o.save()
+  app.use(bodyParser.urlencoded({ extended: true }))
 
-  const l = new Listing({
-      name: 'Liberty Heights',
-      ownerId: o.id,
-      address: 'Green Paradise, Bangalore'
+  app.get('/api/property', async (req, resp) => {
+    const query = req.query.name
+    resp.send(JSON.stringify(await getPropertiesForNameOrAddress(query)))
   })
 
-  await l.save()
+  app.post('/api/property/create', async (req, res) => {
+    const name = req.body.name
+    const address = req.body.address
+    if (!(name && address)) {
+      res.status(400)
+      res.send("'name' or 'address' params undefined or emtpy")
+      return
+    }
+    await createProperty({name, address})
+    res.status(200)
+    res.send('ok')
+  })
 
-  const listings = await Listing.findAll()
-  console.log(listings)
-  
+  app.get('/static/*', (req, res) => {
+    request('http://localhost:8080' + req.url).pipe(res)
+  })
+
+  app.get('*', (req, res) => {
+    request('http://localhost:8080/').pipe(res)
+  })
+
+  app.listen(5000)
+
 }
 
 main()
+
+const add = 4 

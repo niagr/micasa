@@ -1,16 +1,19 @@
-import { Table, Column, Model, BelongsTo, HasMany, ForeignKey, DataType } from 'sequelize-typescript'
-import Listing from './Listing'
+import * as mongoose from 'mongoose'
 
-@Table
-export default class Owner extends Model<Owner> {
-  
-  @Column({allowNull: false})
+import db from '../db'
+
+class Owner {
   name: string;
-
-  @Column({allowNull: false})
-  phoneNumber: string;
-
-  @HasMany(() => Listing)
-  listings: Listing[]
-
+  phoneNumber: string
 }
+
+export interface OwnerDocument extends Owner, mongoose.Document {}
+
+const OwnerSchema = new mongoose.Schema({
+  name: String,
+  phoneNumber: String
+})
+
+OwnerSchema.loadClass(Owner)
+
+export const OwnerModel = db.model<OwnerDocument>("Owner", OwnerSchema)
