@@ -15,11 +15,6 @@ async function main () {
 
   const app = express()
 
-  app.use((req, resp, next) => {
-    resp.setHeader('Access-Control-Allow-Origin', '*')
-    next()
-  })
-
   app.use(bodyParser.urlencoded({ extended: true }))
 
   app.get('/api/property', async (req, resp) => {
