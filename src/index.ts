@@ -8,8 +8,8 @@ import {UserDocument, UserModel as User} from './models/User'
 import {OwnerDocument, OwnerModel as Owner} from './models/Owner'
 import {ListingDocument, ListingModel as Listing} from './models/Listing'
 import {PropertyDocument, PropertyModel as Property} from './models/Property'
-
 import {getPropertiesForNameOrAddress, createProperty} from './api/property'
+import {REACT_APP_URL} from './constants'
 
 async function main () {
 
@@ -41,11 +41,11 @@ async function main () {
   })
 
   app.get('/static/*', (req, res) => {
-    request('http://localhost:8080' + req.url).pipe(res)
+    request(REACT_APP_URL + req.url).pipe(res)
   })
 
   app.get('*', (req, res) => {
-    request('http://localhost:8080/').pipe(res)
+    request(REACT_APP_URL + '/').pipe(res)
   })
 
   app.listen(5000)
